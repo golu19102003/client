@@ -1,24 +1,108 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser, clearAuth } from './store/slices/authSlice';
+import { setConnectionStatus } from './store/slices/chatSlice';
+import socketService from './services/socket';
+import firebaseAuthService from './services/firebaseAuth';
+
+// Components
+import ChatLayout from './components/Layout/ChatLayout';
+import TranslationInterface from './components/Translation/TranslationInterface';
+
+// App Content Component
+function AppContent() {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Set up Firebase auth state listener
+    const unsubscribe = firebaseAuthService.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userData = await firebaseAuthService.getCurrentUser();
+          if (userData) {
+            dispatch(setUser(userData));
+          }
+        } catch (error) {
+          console.error('Error getting user data:', error);
+          dispatch(clearAuth());
+        }
+      } else {
+        dispatch(clearAuth());
+      }
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (token) {
+      // Initialize socket connection
+      socketService.connect(token);
+      dispatch(setConnectionStatus(true));
+
+      // Cleanup on unmount
+      return () => {
+        socketService.disconnect();
+        dispatch(setConnectionStatus(false));
+      };
+    }
+  }, [token, dispatch]);
+
+  return (
+    <Router>
+      <div className="App h-screen bg-gray-50">
+        <Routes>
+          {/* Main Routes */}
+          <Route
+            path="/"
+            element={<TranslationInterface />}
+          />
+          <Route
+            path="/translate"
+            element={<TranslationInterface />}
+          />
+          <Route
+            path="/chat"
+            element={<ChatLayout />}
+          />
+          <Route
+            path="/chat/:roomId"
+            element={<ChatLayout />}
+          />
+
+          {/* Catch all route */}
+          <Route
+            path="*"
+            element={
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
+                  <p className="text-gray-600 mb-4">Page not found</p>
+                  <button
+                    onClick={() => window.history.back()}
+                    className="btn-primary"
+                  >
+                    Go Back
+                  </button>
+                </div>
+              </div>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
   );
 }
 
