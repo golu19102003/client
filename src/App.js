@@ -11,6 +11,10 @@ import firebaseAuthService from './services/firebaseAuth';
 // Components
 import ChatLayout from './components/Layout/ChatLayout';
 import TranslationInterface from './components/Translation/TranslationInterface';
+import Dashboard from './components/Dashboard/Dashboard';
+import SimpleLayout from './components/Layout/SimpleLayout';
+import EnhancedHomepage from './components/Home/EnhancedHomepage';
+import LiveExperiencePage from './components/Live/LiveExperiencePage';
 
 // App Content Component
 function AppContent() {
@@ -54,46 +58,56 @@ function AppContent() {
 
   return (
     <Router>
-      <div className="App h-screen bg-gray-50">
-        <Routes>
-          {/* Main Routes */}
-          <Route
-            path="/"
-            element={<TranslationInterface />}
-          />
-          <Route
-            path="/translate"
-            element={<TranslationInterface />}
-          />
-          <Route
-            path="/chat"
-            element={<ChatLayout />}
-          />
-          <Route
-            path="/chat/:roomId"
-            element={<ChatLayout />}
-          />
+      <SimpleLayout>
+        <div className="App h-screen bg-gray-50 dark:bg-gray-900">
+          <Routes>
+            {/* Main Routes */}
+            <Route
+              path="/"
+              element={<EnhancedHomepage />}
+            />
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
+            <Route
+              path="/translate"
+              element={<TranslationInterface />}
+            />
+            <Route
+              path="/chat"
+              element={<ChatLayout />}
+            />
+            <Route
+              path="/chat/:roomId"
+              element={<ChatLayout />}
+            />
+            <Route
+              path="/live"
+              element={<LiveExperiencePage />}
+            />
 
-          {/* Catch all route */}
-          <Route
-            path="*"
-            element={
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-                  <p className="text-gray-600 mb-4">Page not found</p>
-                  <button
-                    onClick={() => window.history.back()}
-                    className="btn-primary"
-                  >
-                    Go Back
-                  </button>
+            {/* Catch all route */}
+            <Route
+              path="*"
+              element={
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
+                    <p className="text-gray-600 mb-4">Page not found</p>
+                    <button
+                      onClick={() => window.history.back()}
+                      className="btn-primary"
+                    >
+                      Go Back
+                    </button>
+                  </div>
                 </div>
-              </div>
-            }
-          />
-        </Routes>
-      </div>
+              }
+            />
+          </Routes>
+        </div>
+      </SimpleLayout>
     </Router>
   );
 }

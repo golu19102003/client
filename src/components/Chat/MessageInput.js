@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { SendIcon, MicrophoneIcon } from '@heroicons/react/outline';
+import { PaperAirplaneIcon, MicrophoneIcon } from '@heroicons/react/24/outline';
 import speechService from '../../services/speechService';
 
 const MessageInput = ({ 
@@ -92,7 +92,7 @@ const MessageInput = ({
             className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             title="Send message"
           >
-            <SendIcon className="h-5 w-5" />
+            <PaperAirplaneIcon className="h-5 w-5" />
           </button>
         </div>
 

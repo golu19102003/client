@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusIcon, SearchIcon, UsersIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/outline';
+import { PlusIcon, MagnifyingGlassIcon, UserGroupIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { useDispatch } from 'react-redux';
 import { setCreateRoomModalOpen } from '../../store/slices/uiSlice';
 
@@ -41,7 +41,7 @@ const Sidebar = ({ rooms, currentRoom, onRoomSelect, onlineUsers }) => {
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <UsersIcon className="h-4 w-4 text-green-500" />
+            <UserGroupIcon className="h-4 w-4 text-green-500" />
             <span className="text-sm font-medium text-gray-700">
               Online ({onlineUsers.length})
             </span>
@@ -68,7 +68,7 @@ const Sidebar = ({ rooms, currentRoom, onRoomSelect, onlineUsers }) => {
       {/* Search */}
       <div className="p-4">
         <div className="relative">
-          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search rooms..."

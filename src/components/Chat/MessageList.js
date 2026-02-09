@@ -115,19 +115,16 @@ const MessageList = ({ messages, currentUser, currentRoom }) => {
                         )}
                       </div>
 
+                      {/* Translation Info */}
+                      {message.originalLanguage !== currentUser.preferredLanguage && (
+                        <div className="text-xs text-blue-600 mt-1">
+                          Translated from {message.originalLanguage?.toUpperCase()}
+                        </div>
+                      )}
+
                       {/* Message Info */}
                       <div className={`flex items-center space-x-2 mt-1 text-xs text-gray-500 ${own ? 'justify-end' : ''}`}>
                         <span>{formatMessageTime(message.createdAt)}</span>
-                        
-                        {/* Translation indicator */}
-                        {message.originalLanguage !== currentUser.preferredLanguage && (
-                          <>
-                            <span>•</span>
-                            <span className="text-blue-600">
-                              Translated from {message.originalLanguage?.toUpperCase()}
-                            </span>
-                          </>
-                        )}
 
                         {/* Read indicator for own messages */}
                         {own && message.readBy?.length > 1 && (

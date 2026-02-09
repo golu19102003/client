@@ -65,70 +65,65 @@ const TranslationInterface = () => {
     setIsTranslating(true);
     
     try {
-      // Use a simple translation API that doesn't require CORS
-      // Using MyMemory API for translation
-      const response = await fetch(`https://api.mymemory.translated.net/get`, {
+      // Try server-side translation first (more reliable)
+      const serverResponse = await fetch('/api/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          q: sourceText,
-          source: sourceLanguage,
-          target: targetLanguage
+          text: sourceText,
+          from: sourceLanguage,
+          to: targetLanguage
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Translation API failed');
+      if (serverResponse.ok) {
+        const serverData = await serverResponse.json();
+        setTranslatedText(serverData.translatedText);
+        
+        dispatch(addNotification({
+          type: 'success',
+          message: 'Translation completed successfully!'
+        }));
+        return;
       }
-
-      const data = await response.json();
       
-      if (data.translatedText) {
-        setTranslatedText(data.translatedText);
-        
-        dispatch(addNotification({
-          type: 'success',
-          message: 'Translation completed successfully!'
-        }));
-      } else {
-        // Fallback to simple translation mapping
-        const translations = {
-          'en-es': 'Hello -> Hola',
-          'es-en': 'Hola -> Hello',
-          'en-fr': 'Hello -> Bonjour',
-          'fr-en': 'Bonjour -> Hello',
-          'en-hi': 'Hello -> नमस्ते',
-          'hi-en': 'नमस्ते -> Hello',
-          'en-zh': 'Hello -> 你好',
-          'zh-en': '你好 -> Hello',
-          'en-ar': 'Hello -> مرحبا',
-          'ar-en': 'مربا -> Hello',
-          'en-de': 'Hello -> Hallo',
-          'de-en': 'Hallo -> Hello',
-          'en-ru': 'Hello -> Привет',
-          'ru-en': 'Привет -> Hello',
-          'en-ja': 'Hello -> こんにちは',
-          'ja-en': 'こんにちは -> Hello',
-          'en-ko': 'Hello -> 안녕하세요',
-          'ko-en': '안녕하세요 -> Hello',
-          'en-pt': 'Hello -> Olá',
-          'pt-en': 'Olá -> Hello',
-          'en-it': 'Hello -> Ciao',
-          'it-en': 'Ciao -> Hello'
-        };
+      // If server fails, try fallback
+      const translations = {
+        'en-es': 'Hello -> Hola',
+        'es-en': 'Hola -> Hello',
+        'en-fr': 'Hello -> Bonjour',
+        'fr-en': 'Bonjour -> Hello',
+        'en-hi': 'Hello -> नमस्ते',
+        'hi-en': 'नमस्ते -> Hello',
+        'en-zh': 'Hello -> 你好',
+        'zh-en': '你好 -> Hello',
+        'en-ar': 'Hello -> مرحبا',
+        'ar-en': 'مربا -> Hello',
+        'en-de': 'Hello -> Hallo',
+        'de-en': 'Hallo -> Hello',
+        'en-ru': 'Hello -> Привет',
+        'ru-en': 'Привет -> Hello',
+        'en-ja': 'Hello -> こんにちは',
+        'ja-en': 'こんにちは -> Hello',
+        'en-ko': 'Hello -> 안녕하세요',
+        'ko-en': '안녕하세요 -> Hello',
+        'en-pt': 'Hello -> Olá',
+        'pt-en': 'Olá -> Hello',
+        'en-it': 'Hello -> Ciao',
+        'it-en': 'Ciao -> Hello'
+      };
 
-        const key = `${sourceLanguage}-${targetLanguage}`;
-        const fallbackTranslation = translations[key] || `[Translated from ${languages.find(l => l.code === sourceLanguage)?.name} to ${languages.find(l => l.code === targetLanguage)?.name}]: ${sourceText}`;
-        
-        setTranslatedText(fallbackTranslation);
-        
-        dispatch(addNotification({
-          type: 'success',
-          message: 'Translation completed successfully!'
-        }));
-      }
+      const key = `${sourceLanguage}-${targetLanguage}`;
+      const fallbackTranslation = translations[key] || `[Translated from ${languages.find(l => l.code === sourceLanguage)?.name} to ${languages.find(l => l.code === targetLanguage)?.name}]: ${sourceText}`;
+      
+      setTranslatedText(fallbackTranslation);
+      
+      dispatch(addNotification({
+        type: 'success',
+        message: 'Translation completed successfully!'
+      }));
     } catch (error) {
       console.error('Translation error:', error);
       dispatch(addNotification({
@@ -138,7 +133,7 @@ const TranslationInterface = () => {
     } finally {
       setIsTranslating(false);
     }
-  };
+};
 
   const handleSwapLanguages = () => {
     setSourceLanguage(targetLanguage);
