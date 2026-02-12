@@ -53,15 +53,19 @@ const SimpleLayout = ({ children }) => {
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className={`flex h-16 items-center pl-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <div className="flex flex-col items-center justify-center">
-              <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">UT</span>
+            <div className="flex flex-col items-start mt-2">
+              <div className="flex items-start space-x-3 ml-4">
+                <img 
+                  src="/image.png" 
+                  alt="UniTranslate Logo" 
+                  className="h-12 w-10 rounded-lg object-cover"
+                />
+                <div className="flex flex-col">
+                  <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>UniTranslate</span>
+                  <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Welcome back, {user?.displayName || 'User'}
+                  </span>
                 </div>
-                <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>UniTranslate</span>
-              </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                Welcome back, {user?.displayName || 'User'}
               </div>
             </div>
           </div>
