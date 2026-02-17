@@ -57,6 +57,12 @@ npm install
 cd ..
 ```
 
+📝 **Note**: `node_modules` is intentionally excluded from Git (.gitignore) because:
+- Large file sizes (GBs of data)
+- Security best practices
+- Can be regenerated with `npm install`
+- Platform-specific dependencies
+
 3. **Set up environment variables**
 
 **Server (.env)**
